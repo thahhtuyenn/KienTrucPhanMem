@@ -1,5 +1,8 @@
+import decorator.GiamDoc;
+import decorator.NhanVien;
+import decorator.NhanVienBasic;
+import decorator.NhanVienDecorator;
 import state.NhanVienContext;
-import state.congViecNhanVien.GiamDoc;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -15,6 +18,7 @@ public class Main {
 //        nhanvien.setChucVuState(new GiamDoc());
 //        nhanvien.thucHienCongViec();
 
-
+        GiamDoc giamDoc = new GiamDoc(new NhanVienBasic());
+        giamDoc.congViec();
     }
 }

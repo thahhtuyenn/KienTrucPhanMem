@@ -9,6 +9,6 @@ public class NhanVienDecorator implements NhanVien{
 
     @Override
     public void congViec() {
-        System.out.println("Là nhân viên của công ty.");
+        this.nhanVien.congViec();
     }
 }
