@@ -1,0 +1,73 @@
+docker run hello-world 
+
+docker pull nginx
+
+docker run --name nginx-container -p 8082:80 -d nginx
+==> run image ngin với tên container là 'nginx-container' và ánh xạ port của nginx từ 80 thành 8082
+==> sau khi run có thể gõ localhost:8082 trên web
+
+docker logs 827
+==> xem logs của container với container_id, 827 là 3 số đầu của id container
+
+docker ps ==> show các container đang run
+
+docker ps -a ==> show tất cả các container 
+
+docker exec -it 827 /bin/sh
+==> vào container với container_id là 827 và thao tác các lệnh tương ứng trong container đó
+
+docker stop 827
+==> stop container có id = 827 là 3 số đầu của container_id\
+
+docker restart 827
+==> start lại container có container_id = 827
+
+docker rm 827
+==> xóa 1 container có container_id bắt đầu là 827, trước khi xóa container phải đucợ stop 
+
+docker container prune 
+==> xóa tất cả các container đang stop
+
+docker rmi 74c
+==> xóa image có image_id bắt đầu là 74c (ở đây là image hello-world)
+
+docker image prune -a
+==> xóa tất cả image đang không run
+
+docker inspect 2d0
+==> thông tin chi tiết về một container hoặc image, bao gồm cấu hình, 
+trạng thái, các thông số về mạng, volumes, cấu hình môi trường, và nhiều thông tin khác.
+2d0 là 3 ký tự đầu của container_id
+
+docker run --name nginx-container -p 9090:80  -d -v mydata:/data nginx
+==> tạo volume từ image nginx -> tạo ra container 'nginx-container' và gắn volume vào, 
+port container 9090 ánh xạ từ port 80 của container nginx
+
+docker volume ls ==> show all volume
+
+docker volume prune
+==> xóa các volume đang không connect với container nào
+
+docker stats ==> xem các thông số hiệu suất của container
+
+docker network ls ==> show danh sách các network hiện có
+
+docker network create my_network ==> tạo 1 network có tên my_network
+
+docker run -d --network my_network --name my_container -p 8082:80 nginx
+==> run nginx với network 'my_network' và tên container là my_container, port chạy 8082
+
+docker network conect my_network my_container
+==> kết nối 1 container vào network
+
+docker run -d -e MY_ENV=hello_world nginx
+==> chạy 1 container từ image nginx với biến môi trường MY_ENV
+
+docker logs -f my_container
+==> xem logs của container với tên container là my_container
+
+docker build -t my_nginx_image .
+==> build image với Dockerfile đang ở đường dẫn hiện tại '.'
+
+
+
