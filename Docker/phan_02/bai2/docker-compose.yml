@@ -1,0 +1,16 @@
+# Bài 2: Chạy MySQL với Docker Compose		
+# 	Yêu cầu:	
+# 	Tạo một container chạy MySQL phiên bản 8.0.	
+# 	Đặt username là user, password là password và database là mydb	
+
+version: '3'
+services:
+  db:
+    image: mysql:8.0         # Sử dụng MySQL phiên bản 8.0
+    environment:
+      MYSQL_USER: user       # Username
+      MYSQL_PASSWORD: password  # Password
+      MYSQL_DATABASE: mydb    # Tên database
+      MYSQL_ROOT_PASSWORD: password  # Password cho root user
+    ports:
+      - "3306:3306"          # Map port 3306 của host tới container
