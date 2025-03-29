@@ -1,0 +1,24 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password    # Password cho root
+      MYSQL_DATABASE: mydb            # Database mặc định
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin:latest          # Image PHPMyAdmin chính thức
+    depends_on:
+      - db                           # Đảm bảo MySQL khởi động trước
+    ports:
+      - "8081:80"                    # Map port 8081 host tới 80 container
+    environment:
+      PMA_HOST: db                   # Tên service MySQL
+      PMA_PORT: 3306                # Port MySQL trong container
+
+volumes:
+  mysql-data:
