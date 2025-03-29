@@ -1,0 +1,11 @@
+# Bài 1: Chạy một container đơn giản với Docker Compose		
+# 	Yêu cầu:	
+# 	Tạo một container chạy Nginx bằng Docker Compose.	
+# 	Map cổng 8080 của máy host với cổng 80 của container.		
+
+version: '3' # Xác định phiên bản cú pháp Docker Compose
+services: # Định nghĩa các container/service sẽ chạy
+  web: # Tên service là "web"
+    image: nginx:latest    # Sử dụng image nginx chính thức mới nhất
+    ports:
+      - "8080:80"         # Map port 8080 (host) tới port 80 (container)
