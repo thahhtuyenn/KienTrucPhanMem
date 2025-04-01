@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Đặt mật khẩu cho tài khoản root
+      MYSQL_DATABASE: mydatabase  # Tạo cơ sở dữ liệu mặc định
+      MYSQL_USER: user  # Tạo tài khoản người dùng mới
+      MYSQL_PASSWORD: userpassword  # Đặt mật khẩu cho tài khoản người dùng
+    volumes:
+      - mysql_data:/var/lib/mysql  # Gắn volume vào thư mục lưu trữ dữ liệu MySQL
+    ports:
+      - "3306:3306"  # Mở cổng 3306 để kết nối từ bên ngoài vào MySQL
+    networks:
+      - my_network
+
+volumes:
+  mysql_data:  # Định nghĩa volume
+    driver: local  # Sử dụng driver local để lưu trữ dữ liệu trên hệ thống
+
+networks:
+  my_network:
+    driver: bridge
