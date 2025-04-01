@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+
+  # Node.js service
+  node-app:
+    build: .
+    container_name: node-app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      timeout: 5s
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/mydb
+
+volumes:
+  mongo-data:
+    driver: local

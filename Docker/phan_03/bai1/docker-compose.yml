@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest  # Sử dụng image WordPress mới nhất
+    container_name: wordpress
+    ports:
+      - "80:80"  # Mở cổng 80 của máy host để truy cập WordPress
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306  # Kết nối đến MySQL qua service mysql
+      WORDPRESS_DB_NAME: wordpressdb  # Tên cơ sở dữ liệu cho WordPress
+      WORDPRESS_DB_USER: user  # Tài khoản người dùng MySQL
+      WORDPRESS_DB_PASSWORD: userpassword  # Mật khẩu cho tài khoản MySQL
+    depends_on:
+      - mysql  # WordPress phải đợi MySQL khởi động trước
+    networks:
+      - wordpress_net  # Kết nối vào mạng tùy chỉnh
+
+  mysql:
+    image: mysql:5.7  # Sử dụng image MySQL phiên bản 5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # Mật khẩu root MySQL
+      MYSQL_DATABASE: wordpressdb  # Tên cơ sở dữ liệu mặc định
+      MYSQL_USER: user  # Tài khoản người dùng MySQL
+      MYSQL_PASSWORD: userpassword  # Mật khẩu cho người dùng MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql  # Gắn volume vào thư mục dữ liệu của MySQL
+    networks:
+      - wordpress_net  # Kết nối vào mạng tùy chỉnh
+
+volumes:
+  mysql_data:  # Định nghĩa volume để lưu trữ dữ liệu MySQL
+
+networks:
+  wordpress_net:  # Tạo mạng tùy chỉnh để kết nối giữa các dịch vụ
+    driver: bridge  # Sử dụng mạng bridge mặc định của Docker
