@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.student.thanhtuyen.productservice.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.student.thanhtuyen.productservice.models.Product;
 import vn.edu.iuh.fit.student.thanhtuyen.productservice.services.ProductService;
@@ -14,23 +15,23 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<Product>> getAllProducts() {
+        return ResponseEntity.ok(productService.getAllProducts());
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
     }
 
     @PostMapping
-    public Product insertProduct(@RequestBody Product product) {
-        return productService.saveProduct(product);
+    public ResponseEntity<Product> insertProduct(@RequestBody Product product) {
+        return ResponseEntity.ok(productService.saveProduct(product));
     }
 
     @PutMapping
-    public Product updateProduct(@RequestBody Product product) {
-        return productService.saveProduct(product);
+    public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+        return ResponseEntity.ok(productService.saveProduct(product));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -39,7 +40,7 @@ public class ProductController {
     }
 
     @PutMapping("/update-quantity")
-    public Product updateQuantityProduct(@RequestParam Long id, @RequestParam int quantity) {
-        return productService.updateQuantity(id, quantity);
+    public ResponseEntity<Product> updateQuantityProduct(@RequestParam Long id, @RequestParam int quantity) {
+        return ResponseEntity.ok(productService.updateQuantity(id, quantity));
     }
 }
