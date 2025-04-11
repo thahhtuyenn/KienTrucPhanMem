@@ -1,0 +1,137 @@
+version: "3.8"
+services:
+    discovery-service:
+        build: ./DiscoveryService
+        container_name: mcr-discovery-service
+        ports:
+            - "8761:8761"
+        environment:
+            - SPRING_APPLICATION_NAME=mcr-discovery-service
+            - SERVER_PORT=8761
+        networks:
+            - my-network
+    
+    api-gateway:
+        build: ./APIGateway
+        container_name: mcr-api-gateway
+        depends_on:
+            - discovery-service
+        ports:
+            - "8888:8888"
+        environment:
+            - SPRING_APPLICATION_NAME=mcr-api-gateway
+            - SERVER_PORT=8888
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://mcr-discovery-service:8761/eureka/
+        networks:
+            - my-network
+    
+    customer-service:
+        build: ./CustomerService
+        container_name: mcr-customer-service
+        depends_on:
+            - discovery-service
+            - mariadb-customer
+        ports:
+            - "8081:8081"
+        environment:
+            - SPRING_APPLICATION_NAME=mcr-customer-service
+            - SERVER_PORT=8081
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://mcr-discovery-service:8761/eureka/
+            - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-customer:3306/microservicecustomer
+            - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+            - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.mariadb.jdbc.Driver
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+            - SPRING_JPA_SHOW_SQL=true
+        networks:
+            - my-network
+
+    mariadb-customer:
+        image: mariadb:latest
+        container_name: mcr-mariadb-customer
+        ports:
+            - "3301:3306"
+        environment:
+            - MYSQL_DATABASE=microservicecustomer
+            - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        volumes:
+            - mcr-mariadb-customer-data:/var/lib/mysql
+        networks:
+            - my-network
+    
+    product-service:
+        build: ./ProductService
+        container_name: mcr-product-service
+        depends_on:
+            - discovery-service
+            - mariadb-product
+        ports:
+            - "8082:8082"
+        environment:
+            - SPRING_APPLICATION_NAME=mcr-product-service
+            - SERVER_PORT=8082
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://mcr-discovery-service:8761/eureka/
+            - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-product:3306/microserviceproduct
+            - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+            - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.mariadb.jdbc.Driver
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+            - SPRING_JPA_SHOW_SQL=true
+        networks:
+            - my-network
+    
+    mariadb-product:
+        image: mariadb:latest
+        container_name: mcr-mariadb-product
+        ports:
+            - "3302:3306"
+        environment:
+            - MYSQL_DATABASE=microserviceproduct
+            - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        volumes:
+            - mcr-mariadb-product-data:/var/lib/mysql
+        networks:
+            - my-network
+    
+    order-service:
+        build: ./OrderService
+        container_name: mcr-order-service
+        depends_on:
+            - discovery-service
+            - mariadb-order
+        ports:
+            - "8083:8083"
+        environment:
+            - SPRING_APPLICATION_NAME=mcr-order-service
+            - SERVER_PORT=8083
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://mcr-discovery-service:8761/eureka/
+            - SPRING_DATASOURCE_URL=jdbc:mariadb://mariadb-order:3306/microserviceorder
+            - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+            - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.mariadb.jdbc.Driver
+            - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+            - SPRING_JPA_SHOW_SQL=true
+        networks:
+            - my-network
+    
+    mariadb-order:
+        image: mariadb:latest
+        container_name: mcr-mariadb-order
+        ports:
+            - "3303:3306"
+        environment:
+            - MYSQL_DATABASE=microserviceorder
+            - MYSQL_ROOT_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        volumes:
+            - mcr-mariadb-order-data:/var/lib/mysql
+        networks:
+            - my-network
+    
+volumes:
+    mcr-mariadb-customer-data:
+    mcr-mariadb-product-data:
+    mcr-mariadb-order-data:
+    
+networks:
+    my-network:
+        driver: bridge

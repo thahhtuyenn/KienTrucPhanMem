@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import vn.edu.iuh.fit.student.thanhtuyen.orderservice.models.Product;
 
-@FeignClient(name = "product-service", path = "/api/v1/product")
+@FeignClient(name = "mcr-product-service", path = "/api/v1/product")
 public interface ProductServiceClient {
     @GetMapping("/{id}")
     ResponseEntity<Product> getProductById(@PathVariable Long id);
