@@ -1,0 +1,58 @@
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+
+resilience4j.circuitbreaker:
+  instances:
+    serviceBCircuitBreaker:
+      registerHealthIndicator: true
+      slidingWindowSize: 3
+      minimumNumberOfCalls: 3
+      slidingWindowType: COUNT_BASED
+      permittedNumberOfCallsInHalfOpenState: 2
+      waitDurationInOpenState: 4s
+      failureRateThreshold: 50
+
+resilience4j.retry:
+  instances:
+    serviceBRetry:
+      maxAttempts: 5
+      waitDuration: 3s
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 1
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+        - feign.FeignException
+        - feign.RetryableException
+
+resilience4j.ratelimiter:
+  instances:
+    serviceBRateLimiter:
+      limitForPeriod: 5
+      limitRefreshPeriod: 60s
+      timeoutDuration: 0
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+
+resilience4j.timelimiter:
+  config:
+    default:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
+  instances:
+    serviceBTimeLimiter:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
